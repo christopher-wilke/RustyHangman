@@ -9,7 +9,7 @@ pub struct GuessState
 trait GuessMachine
 {
     fn create(word_to_guess: &'static str) -> Self;
-    fn user_pressed_key(value: &String, state: &GuessState);
+    fn user_pressed_key(value: &String, state: &mut GuessState) -> bool;
 }
 
 impl GuessMachine for GuessState
@@ -30,9 +30,10 @@ impl GuessMachine for GuessState
         }
     }
 
-    fn user_pressed_key(value: &String, state: &Self)
+    fn user_pressed_key(value: &String, state: &mut GuessState) -> bool
     {
         let mut i: usize = 0;
+        let mut hit: bool = false;
 
         for _c in state.word_to_guess.chars()
         {
@@ -42,24 +43,24 @@ impl GuessMachine for GuessState
                     if let Some(y) = value.chars().nth(0)
                     {
                         if y == x
-                        {
-                            println!("We have a match at {}! {}", i, y);
+                        {                           
+                            state.current_guess_state[i] = y.to_string();
+                            hit = true;
                         }
                     }
                 },
                 None => println!("Could not find value")
             };
-
             i += 1;
         }
-        println!("You pressed {}", *value);
-        // println!("{}", "Hello rfrom user pressed event");
+
+        hit
     }
 }
 
-pub fn user_pressed_key(value: &String, guess_state: &GuessState)
+pub fn user_pressed_key(value: &String, state: &mut GuessState) -> bool
 {
-    GuessState::user_pressed_key(value, &guess_state);
+    GuessState::user_pressed_key(value, state)
 }
 
 pub fn create(input: String) -> GuessState

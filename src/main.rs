@@ -40,7 +40,16 @@ fn main() {
             {
                 if &input.len() > &0
                 {
-                    guessmachine::user_pressed_key(&input, &guesser);
+                    let success: bool = guessmachine::user_pressed_key(&input, &mut guesser);
+
+                    if success
+                    {
+                        guessmachine::print_current_state(&guesser);
+                    }
+                    else
+                    {
+                        println!("nope");
+                    }
                     &input.clear();
                 }
             },
