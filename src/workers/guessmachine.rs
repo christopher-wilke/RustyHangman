@@ -1,4 +1,3 @@
-#[derive(Debug)]
 pub struct GuessState
 {
     current_guess_state: Vec<String>,
@@ -9,11 +8,23 @@ pub struct GuessState
 trait GuessMachine
 {
     fn create(word_to_guess: &'static str) -> Self;
-    fn user_pressed_key(value: &String, state: &mut GuessState) -> bool;
+    fn user_pressed_key(value: &String, state: &mut Self) -> bool;
+    fn add_to_counter_wrong_chars(&mut self);
+    fn get_counter_wrong_chars(&self) -> usize;
 }
 
 impl GuessMachine for GuessState
 {
+    fn get_counter_wrong_chars(&self) -> usize
+    {
+        self.counter_wrong_chars
+    }
+
+    fn add_to_counter_wrong_chars(&mut self)
+    {
+        self.counter_wrong_chars += 1;
+    }
+
     fn create(word_to_guess: &'static str) -> Self
     {
         let mut _guess_state: Vec<String> = Vec::new();
@@ -30,7 +41,7 @@ impl GuessMachine for GuessState
         }
     }
 
-    fn user_pressed_key(value: &String, state: &mut GuessState) -> bool
+    fn user_pressed_key(value: &String, state: &mut Self) -> bool
     {
         let mut i: usize = 0;
         let mut hit: bool = false;
@@ -53,9 +64,17 @@ impl GuessMachine for GuessState
             };
             i += 1;
         }
-
+        if hit == false
+        {
+            Self::add_to_counter_wrong_chars(state);
+        }
         hit
     }
+}
+
+pub fn get_counter_wrong_chars(state: &GuessState) -> usize
+{
+    state.get_counter_wrong_chars()
 }
 
 pub fn user_pressed_key(value: &String, state: &mut GuessState) -> bool

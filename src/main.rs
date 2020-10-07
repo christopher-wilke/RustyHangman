@@ -5,14 +5,15 @@ mod statics {
 }
 
 mod workers {
-    pub mod random;
     pub mod guessmachine;
+    pub mod hangmanwriter;
+    pub mod random;
 }
 
 use std::io::stdin;
 use program::states;
 use statics::statements;
-use workers::{guessmachine, random};
+use workers::{guessmachine, hangmanwriter, random};
 
 
 fn main() {
@@ -25,9 +26,7 @@ fn main() {
 
     println!("word to guess = {}", &word_to_guess);
     let mut guesser = guessmachine::create(word_to_guess);
-    
     guessmachine::print_current_state(&guesser);
-
     let mut program_state = states::UserPressedKey;
 
     loop 
@@ -48,7 +47,14 @@ fn main() {
                     }
                     else
                     {
-                        println!("nope");
+                        match guessmachine::get_counter_wrong_chars(&guesser)
+                        {
+                            1 => workers::hangmanwriter::first_attempt(),
+                            2 => workers::hangmanwriter::second_attempt(),
+                            3 => workers::hangmanwriter::third_attempt(),
+                            4 => workers::hangmanwriter::fourth_attempt(),
+                            _ => println!("Game ended.")
+                        }
                     }
                     &input.clear();
                 }
