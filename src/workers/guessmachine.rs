@@ -2,7 +2,8 @@ pub struct GuessState
 {
     current_guess_state: Vec<String>,
     counter_wrong_chars: usize,
-    word_to_guess: &'static str
+    word_to_guess: &'static str,
+    finished: bool
 }
 
 trait GuessMachine
@@ -11,10 +12,28 @@ trait GuessMachine
     fn user_pressed_key(value: &String, state: &mut Self) -> bool;
     fn add_to_counter_wrong_chars(&mut self);
     fn get_counter_wrong_chars(&self) -> usize;
+    fn finished(&self);
 }
 
 impl GuessMachine for GuessState
 {
+    fn finished(&self)
+    {
+        let mut finished: bool = true;
+
+        for x in self.current_guess_state.iter()
+        {
+            if x == "_"
+            {
+                finished = false;
+            }
+        }
+        if finished == true
+        {
+            println!("Congratulations! You guessed it right :)");
+        }
+    }
+
     fn get_counter_wrong_chars(&self) -> usize
     {
         self.counter_wrong_chars
@@ -38,6 +57,7 @@ impl GuessMachine for GuessState
             current_guess_state: _guess_state,
             counter_wrong_chars: 0,
             word_to_guess: word_to_guess,
+            finished: false
         }
     }
 
@@ -68,6 +88,8 @@ impl GuessMachine for GuessState
         {
             Self::add_to_counter_wrong_chars(state);
         }
+        Self::finished(state);
+
         hit
     }
 }

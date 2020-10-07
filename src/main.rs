@@ -18,13 +18,11 @@ use workers::{guessmachine, hangmanwriter, random};
 
 fn main() {
 
+    println!("{}", statements::program_starts());
+
     let mut input = String::new();
     let mut buffer = String::new();
-
-    println!("{}", statements::program_starts());
     let word_to_guess: String = random::get_word();
-
-    println!("word to guess = {}", &word_to_guess);
     let mut guesser = guessmachine::create(word_to_guess);
     guessmachine::print_current_state(&guesser);
     let mut program_state = states::UserPressedKey;
