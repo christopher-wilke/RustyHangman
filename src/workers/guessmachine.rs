@@ -2,8 +2,7 @@ pub struct GuessState
 {
     current_guess_state: Vec<String>,
     counter_wrong_chars: usize,
-    word_to_guess: &'static str,
-    finished: bool
+    word_to_guess: &'static str
 }
 
 trait GuessMachine
@@ -56,8 +55,7 @@ impl GuessMachine for GuessState
         {
             current_guess_state: _guess_state,
             counter_wrong_chars: 0,
-            word_to_guess: word_to_guess,
-            finished: false
+            word_to_guess: word_to_guess
         }
     }
 

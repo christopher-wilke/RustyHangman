@@ -11,7 +11,7 @@ mod workers {
 }
 
 use std::io::stdin;
-use program::states;
+use program::States;
 use statics::statements;
 use workers::{guessmachine, hangmanwriter, random};
 
@@ -25,7 +25,7 @@ fn main() {
     let word_to_guess: String = random::get_word();
     let mut guesser = guessmachine::create(word_to_guess);
     guessmachine::print_current_state(&guesser);
-    let mut program_state = states::UserPressedKey;
+    let mut program_state = States::UserPressedKey;
 
     loop 
     {
@@ -33,7 +33,7 @@ fn main() {
 
         match program_state
         {
-            states::UserPressedKey =>
+            States::UserPressedKey =>
             {
                 if &input.len() > &0
                 {
@@ -47,17 +47,17 @@ fn main() {
                     {
                         match guessmachine::get_counter_wrong_chars(&guesser)
                         {
-                            1 => workers::hangmanwriter::first_attempt(),
-                            2 => workers::hangmanwriter::second_attempt(),
-                            3 => workers::hangmanwriter::third_attempt(),
-                            4 => workers::hangmanwriter::fourth_attempt(),
+                            1 => hangmanwriter::first_attempt(),
+                            2 => hangmanwriter::second_attempt(),
+                            3 => hangmanwriter::third_attempt(),
+                            4 => hangmanwriter::fourth_attempt(),
                             _ => println!("Game ended.")
                         }
                     }
                     &input.clear();
                 }
             },
-            states::ProgramExits => {
+            States::ProgramExits => {
                 println!("Program exits");
                 break;
             }
@@ -68,8 +68,8 @@ fn main() {
                 input.push_str(&buffer.trim_end().to_lowercase());
 
                 match &*input {
-                    "exit" => program_state = states::ProgramExits,
-                    _ => program_state = states::UserPressedKey
+                    "exit" => program_state = States::ProgramExits,
+                    _ => program_state = States::UserPressedKey
                 }
             },
             Err(_) => continue 

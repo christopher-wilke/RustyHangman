@@ -1,4 +1,4 @@
-pub enum states
+pub enum States
 {
     ProgramExits,
     UserPressedKey
