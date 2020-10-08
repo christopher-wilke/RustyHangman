@@ -37,7 +37,7 @@ fn main() {
             {
                 if &input.len() > &0
                 {
-                    let success: bool = guessmachine::user_pressed_key(&input, &mut guesser);
+                    let success: bool = guessmachine::user_pressed_key(&mut guesser, &input);
 
                     if success
                     {

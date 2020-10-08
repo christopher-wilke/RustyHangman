@@ -8,7 +8,7 @@ pub struct GuessState
 trait GuessMachine
 {
     fn create(word_to_guess: &'static str) -> Self;
-    fn user_pressed_key(value: &String, state: &mut Self) -> bool;
+    fn user_pressed_key(&mut self, value: &String) -> bool;
     fn add_to_counter_wrong_chars(&mut self);
     fn get_counter_wrong_chars(&self) -> usize;
     fn finished(&self);
@@ -59,34 +59,32 @@ impl GuessMachine for GuessState
         }
     }
 
-    fn user_pressed_key(value: &String, state: &mut Self) -> bool
+    fn user_pressed_key(&mut self, value: &String) -> bool
     {
         let mut i: usize = 0;
         let mut hit: bool = false;
 
-        for _c in state.word_to_guess.chars()
+        for _c in self.word_to_guess.chars()
         {
-            match state.word_to_guess.chars().nth(i)
+
+            if let Some(x) = self.word_to_guess.chars().nth(i)
             {
-                Some(x) => {
-                    if let Some(y) = value.chars().nth(0)
-                    {
-                        if y == x
-                        {                           
-                            state.current_guess_state[i] = y.to_string();
-                            hit = true;
-                        }
+                if let Some(y) = value.chars().nth(0)
+                {
+                    if y == x
+                    {                           
+                        self.current_guess_state[i] = y.to_string();
+                        hit = true;
                     }
-                },
-                None => println!("Could not find value")
-            };
+                }
+            }
             i += 1;
         }
         if hit == false
         {
-            Self::add_to_counter_wrong_chars(state);
+            self.add_to_counter_wrong_chars();
         }
-        Self::finished(state);
+        self.finished();
 
         hit
     }
@@ -97,9 +95,9 @@ pub fn get_counter_wrong_chars(state: &GuessState) -> usize
     state.get_counter_wrong_chars()
 }
 
-pub fn user_pressed_key(value: &String, state: &mut GuessState) -> bool
+pub fn user_pressed_key(state: &mut GuessState, value: &String) -> bool
 {
-    GuessState::user_pressed_key(value, state)
+    state.user_pressed_key(value)
 }
 
 pub fn create(input: String) -> GuessState
